@@ -1,0 +1,37 @@
+services:
+  burger-database:
+    container_name: "burger-database"
+    image: postgres:alpine
+    restart: unless-stopped
+    depends_on:
+      - burger-minio
+    environment:
+      - POSTGRES_HOST=burger-database
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=burger
+      - POSTGRES_MODE=disable
+    ports:
+      - "5432:5432"
+    volumes:
+      - burger-data:/var/lib/postgresql/data
+
+  burger-minio:
+    container_name: "burger-minio"
+    image: minio/minio
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: burger-minio
+    restart: unless-stopped
+    volumes:
+      - minio-burger-data:/data
+      - minio-burger-root:/root/.minio
+    command: server /data
+
+volumes:
+  burger-data:
+  minio-burger-data:
+  minio-burger-root:

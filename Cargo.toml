@@ -1,0 +1,46 @@
+cargo-features = ["profile-rustflags", "codegen-backend"]
+
+[package]
+name = "burger"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[profile.dev]
+rustflags = ["-Z", "threads=8"]
+codegen-backend = "cranelift"
+
+[dependencies]
+aide = { version = "0.13.4", features = ["axum", "axum-extra", "axum-extra-query", "axum-multipart", "macros", "scalar"] }
+aide-axum-typed-multipart = "0.13.0"
+anyhow = "1.0.86"
+aws-config = "1.5.4"
+aws-sdk-s3 = "1.40.0"
+axum = { version = "0.7.5", features = ["macros", "multipart"] }
+axum-extra = { version = "0.9.3", features = ["query"] }
+axum-jsonschema = { version = "0.8.0", features = ["aide"] }
+axum_typed_multipart = "0.11.1"
+clap = { version = "4.5.8", features = ["derive", "env"] }
+futures = "0.3.30"
+reqwest = { version = "0.12.5", features = ["json"] }
+schemars = { version = "0.8.21", features = ["bytes", "url", "uuid1"] }
+serde = "1.0.203"
+sqlx = { version = "0.7.4", features = ["macros", "migrate", "postgres", "runtime-tokio", "time", "tls-rustls", "uuid"] }
+thiserror = "1.0.61"
+tokio = { version = "1.38.0", features = ["rt-multi-thread", "macros", "signal"] }
+tokio-stream = "0.1.15"
+tower-http = { version = "0.5.2", features = ["catch-panic", "compression-full", "fs", "sensitive-headers", "timeout", "trace"] }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+url = { version = "2.5.2", features = ["serde"] }
+
+[dependencies.uuid]
+version = "1.9.1"
+features = [
+    "serde", 
+    "v4"
+]
+
+[features]
+dev = []
+fixture = []

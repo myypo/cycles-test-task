@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select \n            b.name,\n            coalesce(nullif(array_agg(distinct(t.tag_id, t.name)), '{null}'), '{}') as \"tag_list!: Vec<(Uuid, String)>\" ,\n            coalesce(nullif(array_agg(distinct(i.ingredient_id, i.name)), '{null}'), '{}') as \"ingredient_list!: Vec<(Uuid, String)>\",\n            coalesce(nullif(array_agg(distinct(ib.external_image_id)), '{null}'), '{}') as \"image_id_list!: Vec<Uuid>\" \n        from \"burger\" b\n        left join \n            \"burger_tag\" bt on bt.burger_id = b.burger_id\n        left join\n            \"tag\" t on t.tag_id = bt.tag_id\n        left join\n            burger_ingredient bi on b.burger_id = bi.burger_id\n        left join \n            ingredient i on bi.ingredient_id = i.ingredient_id\n        left join\n            \"image_burger\" ib on b.burger_id = ib.burger_id\n        where\n            b.burger_id = $1\n        group by b.burger_id\n        limit 1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "tag_list!: Vec<(Uuid, String)>",
+        "type_info": "RecordArray"
+      },
+      {
+        "ordinal": 2,
+        "name": "ingredient_list!: Vec<(Uuid, String)>",
+        "type_info": "RecordArray"
+      },
+      {
+        "ordinal": 3,
+        "name": "image_id_list!: Vec<Uuid>",
+        "type_info": "UuidArray"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "d1647c01017e2f9bdb38fa34a00b1fd75f3de5c8efe732afde08046f82dc100a"
+}

@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select \n            name,\n            coalesce(nullif(array_agg(distinct(image_ingredient.external_image_id)), '{null}'), '{}') as \"image_id_list!: Vec<Uuid>\" \n        from \"ingredient\"\n        left join\n            \"image_ingredient\" on image_ingredient.ingredient_id = $1\n        where\n            ingredient.ingredient_id = $1\n        group by ingredient.ingredient_id\n        limit 1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "image_id_list!: Vec<Uuid>",
+        "type_info": "UuidArray"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      null
+    ]
+  },
+  "hash": "5c58118bf1ff3fc4e00e3d02911669efa0ff56be40d468e35da37c2dd79aa78c"
+}

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        insert into \"ingredient\" (ingredient_id, name)\n            select * from unnest($1::uuid[], $2::varchar[])\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "UuidArray",
+        "VarcharArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a941e08a326c276a095e7e9b6b86eca603538d8b19eee5f653fcf808a8ed6614"
+}

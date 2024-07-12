@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into \"burger\" (name) values ($1) returning burger_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "burger_id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "3610c192a03a85c562ec41d01343cc9cb2c54ff81073604512ef00add42afbad"
+}

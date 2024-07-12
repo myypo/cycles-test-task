@@ -1,0 +1,50 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n    with filtered_burgers as (\n        select\n            b.burger_id\n        from\n            \"burger\" b\n        left join \n            \"burger_tag\" bt on b.burger_id = bt.burger_id\n        left join\n            \"tag\" t on t.tag_id = bt.tag_id\n        left join\n            \"burger_ingredient\" bi on b.burger_id = bi.burger_id\n        left join \n            \"ingredient\" i on i.ingredient_id = bi.ingredient_id\n        where\n            ($1::varchar is null or b.name ilike $1 collate \"en-US-x-icu\")\n            and (cardinality($2::varchar[]) = 0 or t.name = any($2))\n            and (cardinality($3::varchar[]) = 0 or i.name = any($3))\n        group by b.burger_id\n        limit $4\n        offset $5\n    )\n    select\n        b.burger_id as id,\n        b.name,\n        coalesce(nullif(array_agg(distinct(t.tag_id, t.name)), '{null}'), '{}') as \"tag_list!: Vec<(Uuid, String)>\" ,\n        coalesce(nullif(array_agg(distinct(i.ingredient_id, i.name)), '{null}'), '{}') as \"ingredient_list!: Vec<(Uuid, String)>\",\n        coalesce(nullif(array_agg(distinct(ib.external_image_id)), '{null}'), '{}') as \"image_id_list!: Vec<Uuid>\" \n    from\n        \"burger\" b\n    left join \n        \"burger_tag\" bt on b.burger_id = bt.burger_id\n    left join\n        \"tag\" t on t.tag_id = bt.tag_id\n    left join\n        \"burger_ingredient\" bi on b.burger_id = bi.burger_id\n    left join \n        \"ingredient\" i on i.ingredient_id = bi.ingredient_id\n    left join\n        \"image_burger\" ib on b.burger_id = ib.burger_id\n    where\n        b.burger_id in (select burger_id from filtered_burgers)\n    group by b.burger_id\n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "tag_list!: Vec<(Uuid, String)>",
+        "type_info": "RecordArray"
+      },
+      {
+        "ordinal": 3,
+        "name": "ingredient_list!: Vec<(Uuid, String)>",
+        "type_info": "RecordArray"
+      },
+      {
+        "ordinal": 4,
+        "name": "image_id_list!: Vec<Uuid>",
+        "type_info": "UuidArray"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "VarcharArray",
+        "VarcharArray",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "241fb89b40307b016d8bad28b08335bf6351ebd7475ef646f70cc47d4d1585bf"
+}

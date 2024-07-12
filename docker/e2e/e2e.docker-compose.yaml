@@ -1,0 +1,48 @@
+services:
+  burger-e2e-server:
+    container_name: "burger-e2e-server"
+    image: burger-e2e-server:latest
+    depends_on:
+      - burger-e2e-minio
+      - burger-e2e-database
+    restart: unless-stopped
+    ports:
+      - "16161:16161"
+
+  burger-e2e-database:
+    container_name: "burger-e2e-database"
+    image: postgres:alpine
+    restart: unless-stopped
+    depends_on:
+      - burger-e2e-minio
+    environment:
+      - POSTGRES_HOST=burger-e2e-database
+      - POSTGRES_PORT=6969
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=burger
+      - POSTGRES_MODE=disable
+    ports:
+      - "6969:6969"
+    command: -p 6969
+    volumes:
+      - burger-e2e-data:/var/lib/postgresql/data
+
+  burger-e2e-minio:
+    container_name: "burger-e2e-minio"
+    image: minio/minio
+    ports:
+      - "9999:9999"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: burger-minio
+    restart: unless-stopped
+    volumes:
+      - minio-burger-e2e-data:/data
+      - minio-burger-e2e-root:/root/.minio
+    command: server /data --address=":9999" --console-address=":15336"
+
+volumes:
+  burger-e2e-data:
+  minio-burger-e2e-data:
+  minio-burger-e2e-root:

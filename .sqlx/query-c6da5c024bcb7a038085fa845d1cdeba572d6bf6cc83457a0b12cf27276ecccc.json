@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into \"image_burger\" (external_image_id, burger_id) values ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c6da5c024bcb7a038085fa845d1cdeba572d6bf6cc83457a0b12cf27276ecccc"
+}

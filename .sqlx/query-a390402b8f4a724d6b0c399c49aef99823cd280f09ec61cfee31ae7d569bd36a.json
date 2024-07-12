@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        insert into \"tag\" (tag_id, name) \n            select * from unnest($1::uuid[], $2::varchar[])\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "UuidArray",
+        "VarcharArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a390402b8f4a724d6b0c399c49aef99823cd280f09ec61cfee31ae7d569bd36a"
+}
